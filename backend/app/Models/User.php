@@ -4,24 +4,31 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+// Related models
+use App\Models\Project;
+use App\Models\Comment;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, HasUuids;
 
     /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
      */
+
     protected $fillable = [
         'name',
         'email',
         'password',
+        'role',
+        'status',
     ];
 
     /**
@@ -45,5 +52,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /* User has many projects */
+    public function projects() {
+        return $this->hasMany(Project::class);
+    }
+
+    /* User has many comments */
+    public function comments() {
+        return $this->hasMany(Comment::class);
     }
 }
